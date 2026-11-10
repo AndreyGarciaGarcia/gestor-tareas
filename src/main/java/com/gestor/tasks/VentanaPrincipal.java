@@ -6,6 +6,7 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -22,8 +23,8 @@ public class VentanaPrincipal extends JFrame {
     private JButton btnCompletar;
     private JButton btnEliminar;
 
-    public VentanaPrincipal() {
-        gestor = new GestorTareas();
+    public VentanaPrincipal(GestorTareas gestor) {
+        this.gestor = gestor;
         setTitle("Gestor de Tareas");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(620, 480);
@@ -115,6 +116,11 @@ public class VentanaPrincipal extends JFrame {
             JOptionPane.showMessageDialog(this, "Error al crear la tarea: " + e.getMessage());
             return;
         }
+        try {
+            gestor.guardarEnArchivo("tareas.txt");
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "No se pudo guardar la tarea.");
+        }
         cargarTareas();
     }
 
@@ -183,6 +189,11 @@ public class VentanaPrincipal extends JFrame {
         Tarea actualizada = gestor.marcarCompletada(tarea.getId());
         if (actualizada != null) {
             JOptionPane.showMessageDialog(this, "Tarea marcada como COMPLETADA.");
+            try {
+                gestor.guardarEnArchivo("tareas.txt");
+            } catch (IOException e) {
+                JOptionPane.showMessageDialog(this, "No se pudo guardar la tarea.");
+            }
             cargarTareas();
         }
     }
@@ -203,6 +214,11 @@ public class VentanaPrincipal extends JFrame {
             boolean eliminada = gestor.eliminarTarea(tarea.getId());
             if (eliminada) {
                 JOptionPane.showMessageDialog(this, "Tarea eliminada.");
+                try {
+                    gestor.guardarEnArchivo("tareas.txt");
+                } catch (IOException e) {
+                    JOptionPane.showMessageDialog(this, "No se pudo guardar la tarea.");
+                }
                 cargarTareas();
             }
         }

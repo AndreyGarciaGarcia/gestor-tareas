@@ -1,5 +1,11 @@
 package com.gestor.tasks;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -110,6 +116,51 @@ public class GestorTareas {
             }
         }
         return resultados;
+    }
+
+    public void guardarEnArchivo(String ruta) throws IOException {
+        try (PrintWriter out = new PrintWriter(new FileWriter(ruta))) {
+            for (Tarea tarea : tareas) {
+                out.println(tarea.getId() + "|" + tarea.getTitulo() + "|" + tarea.getDescripcion()
+                        + "|" + tarea.getFechaCreacion() + "|" + tarea.getFechaLimite()
+                        + "|" + tarea.getEstado() + "|" + tarea.getPrioridad());
+            }
+        }
+    }
+
+    public void cargarDesdeArchivo(String ruta) {
+        File archivo = new File(ruta);
+        if (!archivo.exists()) {
+            return;
+        }
+        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                if (linea.trim().isEmpty()) {
+                    continue;
+                }
+                String[] partes = linea.split("\\|", -1);
+                if (partes.length < 7) {
+                    continue;
+                }
+                try {
+                    Tarea tarea = new Tarea(
+                            Integer.parseInt(partes[0]),
+                            partes[1],
+                            partes[2],
+                            LocalDate.parse(partes[3]),
+                            LocalDate.parse(partes[4]),
+                            Estado.valueOf(partes[5]),
+                            Prioridad.valueOf(partes[6])
+                    );
+                    tareas.add(tarea);
+                } catch (Exception e) {
+                    // Ignorar líneas malformadas
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("No se pudo leer el archivo de tareas: " + e.getMessage());
+        }
     }
 
     public int getTotalTareas() {
