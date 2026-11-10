@@ -33,5 +33,8 @@ Thumbs.db
 # Logs
 *.log
 
-# Libraries (JUnit)
+# Libraries (JUnit y MySQL Connector/J)
 lib/
+
+# Archivo de persistencia (migrado a MySQL)
+tareas.txt

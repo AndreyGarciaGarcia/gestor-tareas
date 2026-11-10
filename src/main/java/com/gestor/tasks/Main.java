@@ -2,11 +2,20 @@ package com.gestor.tasks;
 
 import javax.swing.SwingUtilities;
 
+/**
+ * Punto de entrada de la aplicación (interfaz gráfica con Swing).
+ */
 public class Main {
 
     public static void main(String[] args) {
-        GestorTareas gestor = new GestorTareas();
-        gestor.cargarDesdeArchivo("tareas.txt");
+        GestorTareas gestor;
+        try {
+            MySQLRepositorio repositorio = new MySQLRepositorio();
+            gestor = new GestorTareas(repositorio);
+        } catch (Exception e) {
+            System.out.println("No se pudo conectar a la base de datos: " + e.getMessage());
+            return;
+        }
 
         SwingUtilities.invokeLater(new Runnable() {
             @Override

@@ -1,48 +1,39 @@
 package com.gestor.tasks;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Contiene la lógica de gestión de las tareas:
+ * creación, búsqueda, modificación, eliminación,
+ * filtrado y estadísticas.
+ * Se encarga de coordinar la persistencia a través del repositorio.
+ */
 public class GestorTareas {
 
     private ArrayList<Tarea> tareas;
     private int ultimoId;
+    private RepositorioTareas repositorio;
 
-    public GestorTareas() {
+    public GestorTareas(RepositorioTareas repositorio) {
         this.tareas = new ArrayList<>();
         this.ultimoId = 1;
+        this.repositorio = repositorio;
+        this.tareas.addAll(repositorio.obtenerTareas());
     }
 
     public Tarea crearTarea(String titulo, String descripcion, LocalDate fechaLimite, Prioridad prioridad) {
         Tarea nuevaTarea = new Tarea(generarId(), titulo, descripcion, LocalDate.now(), fechaLimite, Estado.PENDIENTE, prioridad);
-        tareas.add(nuevaTarea);
-        return nuevaTarea;
+        Tarea tareaGuardada = repositorio.guardar(nuevaTarea);
+        tareas.add(tareaGuardada);
+        return tareaGuardada;
     }
 
     private int generarId() {
         int id = ultimoId;
         ultimoId++;
-        while (existeId(id)) {
-            id = ultimoId;
-            ultimoId++;
-        }
         return id;
-    }
-
-    private boolean existeId(int id) {
-        for (Tarea tarea : tareas) {
-            if (tarea.getId() == id) {
-                return true;
-            }
-        }
-        return false;
     }
 
     public List<Tarea> getTareas() {
@@ -70,7 +61,12 @@ public class GestorTareas {
     }
 
     public boolean eliminarTarea(int id) {
-        return tareas.removeIf(tarea -> tarea.getId() == id);
+        Tarea tarea = obtenerTareaPorId(id);
+        if (tarea == null) {
+            return false;
+        }
+        repositorio.eliminar(tarea);
+        return tareas.remove(tarea);
     }
 
     public Tarea actualizarTarea(int id, String titulo, String descripcion, LocalDate fechaLimite, Prioridad prioridad) {
@@ -82,14 +78,17 @@ public class GestorTareas {
         tarea.setDescripcion(descripcion);
         tarea.setFechaLimite(fechaLimite);
         tarea.setPrioridad(prioridad);
+        repositorio.actualizar(tarea);
         return tarea;
     }
 
     public Tarea marcarCompletada(int id) {
         Tarea tarea = obtenerTareaPorId(id);
-        if (tarea != null) {
-            tarea.setEstado(Estado.COMPLETADA);
+        if (tarea == null) {
+            return null;
         }
+        tarea.setEstado(Estado.COMPLETADA);
+        repositorio.actualizar(tarea);
         return tarea;
     }
 
@@ -111,51 +110,6 @@ public class GestorTareas {
             }
         }
         return resultados;
-    }
-
-    public void guardarEnArchivo(String ruta) throws IOException {
-        try (PrintWriter out = new PrintWriter(new FileWriter(ruta))) {
-            for (Tarea tarea : tareas) {
-                out.println(tarea.getId() + "|" + tarea.getTitulo() + "|" + tarea.getDescripcion()
-                        + "|" + tarea.getFechaCreacion() + "|" + tarea.getFechaLimite()
-                        + "|" + tarea.getEstado() + "|" + tarea.getPrioridad());
-            }
-        }
-    }
-
-    public void cargarDesdeArchivo(String ruta) {
-        File archivo = new File(ruta);
-        if (!archivo.exists()) {
-            return;
-        }
-        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
-            String linea;
-            while ((linea = br.readLine()) != null) {
-                if (linea.trim().isEmpty()) {
-                    continue;
-                }
-                String[] partes = linea.split("\\|", -1);
-                if (partes.length < 7) {
-                    continue;
-                }
-                try {
-                    Tarea tarea = new Tarea(
-                            Integer.parseInt(partes[0]),
-                            partes[1],
-                            partes[2],
-                            LocalDate.parse(partes[3]),
-                            LocalDate.parse(partes[4]),
-                            Estado.valueOf(partes[5]),
-                            Prioridad.valueOf(partes[6])
-                    );
-                    tareas.add(tarea);
-                } catch (Exception e) {
-                    // Ignorar líneas malformadas
-                }
-            }
-        } catch (IOException e) {
-            System.out.println("No se pudo leer el archivo de tareas: " + e.getMessage());
-        }
     }
 
     public int getTotalTareas() {
