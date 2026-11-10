@@ -1,8 +1,8 @@
 # Gestor de Tareas (Task Manager)
 
-Aplicación de línea de comandos desarrollada en **Java** para la gestión y organización personal de tareas.
+Aplicación de gestión de tareas con interfaz gráfica desarrollada en **Java** utilizando **Swing**.
 
-El proyecto permite a los usuarios crear, consultar, modificar, eliminar y filtrar tareas, así como visualizar estadísticas de su estado. Es una aplicación de escritorio/consola sin frameworks ni bases de datos, ideal para poner en práctica los fundamentos de la Programación Orientada a Objetos en Java.
+Permite a los usuarios organizar sus actividades, consultar su estado y administrar sus tareas a través de una ventana gráfica.
 
 ## Funcionalidades
 
@@ -14,36 +14,33 @@ El proyecto permite a los usuarios crear, consultar, modificar, eliminar y filtr
   - Fecha límite.
   - Estado (pendiente, en progreso o completada).
   - Prioridad (baja, media o alta).
-- ✅ Mostrar todas las tareas.
-- ✅ Buscar tareas por ID o por título.
-- ✅ Modificar una tarea.
-- ✅ Eliminar una tarea.
+- ✅ Mostrar todas las tareas en una lista.
 - ✅ Marcar una tarea como completada.
-- ✅ Filtrar tareas por estado y por prioridad.
+- ✅ Eliminar una tarea.
 - ✅ Mostrar estadísticas: total, pendientes, en progreso y completadas.
-- ✅ Validación de datos de entrada para evitar errores.
 
 ## Tecnologías utilizadas
 
 - Java.
+- Swing (interfaz gráfica).
 - Programación Orientada a Objetos (POO).
 - Colecciones de Java (`ArrayList`).
 - Git / GitHub.
 
-No se utiliza ningún framework (como Spring Boot) ni base de datos en esta primera versión, con el objetivo de consolidar los fundamentos de Java.
+No se utiliza ningún framework (como Spring Boot) ni base de datos en esta primera versión.
 
 ## Arquitectura
 
 El proyecto sigue una separación de responsabilidades:
 
-- **`Main`**: punto de entrada de la aplicación.
-- **`Menu`**: gestiona la interacción con el usuario (entrada/salida).
+- **`Main`**: punto de entrada de la aplicación (crea la ventana con `SwingUtilities`).
+- **`VentanaPrincipal`**: interfaz gráfica (Swing) que se comunica con el controlador de la ventana.
 - **`GestorTareas`**: contiene la lógica de negocio y la gestión de las tareas.
 - **`Tarea`**: representa una tarea (modelo/concepto) con sus atributos y validaciones.
 - **`Estado`**: enumeración con los estados posibles de una tarea.
 - **`Prioridad`**: enumeración con las prioridades posibles.
 
-Flujo general: `Main` → `Menu` → `GestorTareas` → `Tarea`.
+Flujo general: `Main` → `VentanaPrincipal` → `GestorTareas` → `Tarea`.
 
 ## Estructura de carpetas
 
@@ -55,7 +52,7 @@ src/
             └── gestor/
                 └── tasks/
                     ├── Main.java
-                    ├── Menu.java
+                    ├── VentanaPrincipal.java
                     ├── GestorTareas.java
                     ├── Tarea.java
                     ├── Estado.java
@@ -66,7 +63,7 @@ src/
 
 ### Requisitos
 
-- JDK 8 o superior (se utiliza `LocalDate`).
+- JDK 8 o superior (Swing está incluido en el JDK).
 
 ### Compilar
 
@@ -84,18 +81,15 @@ java -cp out com.gestor.tasks.Main
 
 - [x] Estructura base y arquitectura.
 - [x] Modelo de tareas con validaciones.
-- [x] Lógica de gestión (CRUD, filtros, estadísticas).
-- [x] Interfaz de línea de comandos.
+- [x] Lógica de gestión (creación, completado, eliminación, estadísticas).
+- [x] Interfaz gráfica con Swing.
 - [ ] Persistencia en base de datos.
 - [ ] Añadir tests unitarios (JUnit).
-- [ ] Interfaz gráfica de usuario (GUI).
 
 ## Próximos pasos
 
 - Añadir persistencia (archivo o base de datos).
 - Escribir tests unitarios con JUnit.
-- Crear una interfaz gráfica (Swing/JavaFX).
-- Refactorizar y mejorar la separación de capas.
 
 ## Autor
 
