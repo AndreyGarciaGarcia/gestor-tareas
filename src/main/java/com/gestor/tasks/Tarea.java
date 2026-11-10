@@ -2,10 +2,6 @@ package com.gestor.tasks;
 
 import java.time.LocalDate;
 
-/**
- * Representa una tarea del gestor.
- * Encapsula sus datos y valida los valores introducidos.
- */
 public class Tarea {
 
     private int id;

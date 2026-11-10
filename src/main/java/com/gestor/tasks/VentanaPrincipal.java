@@ -10,10 +10,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.List;
 
-/**
- * Interfaz gráfica (Swing) de la aplicación.
- * Se comunica con el GestorTareas para realizar las operaciones.
- */
 public class VentanaPrincipal extends JFrame {
 
     private GestorTareas gestor;
