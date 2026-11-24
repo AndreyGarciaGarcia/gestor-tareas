@@ -20,7 +20,7 @@ public class VentanaPrincipal extends JFrame {
 
     public VentanaPrincipal(GestorTareas gestor) {
         this.gestor = gestor;
-        setTitle("Gestor de Tareas");
+        setTitle("Mis tareas");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setSize(620, 480);
         setLocationRelativeTo(null);
@@ -29,7 +29,7 @@ public class VentanaPrincipal extends JFrame {
         listaTareas = new JList<>(modeloTareas);
         listaTareas.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        JButton btnNuevaTarea = new JButton("Nueva Tarea");
+        JButton btnNuevaTarea = new JButton("Nueva tarea");
         btnCompletar = new JButton("Completar");
         btnEliminar = new JButton("Eliminar");
         JButton btnEstadisticas = new JButton("Estadísticas");
@@ -106,9 +106,9 @@ public class VentanaPrincipal extends JFrame {
 
         try {
             Tarea tarea = gestor.crearTarea(titulo, descripcion, fechaLimite, prioridad);
-            JOptionPane.showMessageDialog(this, "Tarea creada correctamente con ID: " + tarea.getId());
+            JOptionPane.showMessageDialog(this, "Tarea guardada.");
         } catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(this, "Error al crear la tarea: " + e.getMessage());
+            JOptionPane.showMessageDialog(this, e.getMessage(), "Revisa la tarea", JOptionPane.WARNING_MESSAGE);
             return;
         }
         cargarTareas();
@@ -122,7 +122,7 @@ public class VentanaPrincipal extends JFrame {
         try {
             return LocalDate.parse(entrada.trim());
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Formato de fecha no válido. Se usará la fecha actual.");
+            JOptionPane.showMessageDialog(this, "No he podido leer esa fecha. Usaré la de hoy.");
             return LocalDate.now();
         }
     }
@@ -178,7 +178,7 @@ public class VentanaPrincipal extends JFrame {
         }
         Tarea actualizada = gestor.marcarCompletada(tarea.getId());
         if (actualizada != null) {
-            JOptionPane.showMessageDialog(this, "Tarea marcada como COMPLETADA.");
+            JOptionPane.showMessageDialog(this, "Tarea completada.");
             cargarTareas();
         }
     }
