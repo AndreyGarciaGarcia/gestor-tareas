@@ -4,12 +4,6 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Contiene la lógica de gestión de las tareas:
- * creación, búsqueda, modificación, eliminación,
- * filtrado y estadísticas.
- * Se encarga de coordinar la persistencia a través del repositorio.
- */
 public class GestorTareas {
 
     private ArrayList<Tarea> tareas;

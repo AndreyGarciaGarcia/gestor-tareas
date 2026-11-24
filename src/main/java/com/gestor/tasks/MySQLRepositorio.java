@@ -10,9 +10,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Implementación del repositorio de tareas usando JDBC y MySQL.
- */
+
 public class MySQLRepositorio implements RepositorioTareas {
 
     private static final String URL = "jdbc:mysql://localhost:3306/gestor_tareas?useSSL=false&serverTimezone=UTC";

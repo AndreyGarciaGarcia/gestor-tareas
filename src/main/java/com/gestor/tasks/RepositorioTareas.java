@@ -2,11 +2,6 @@ package com.gestor.tasks;
 
 import java.util.List;
 
-/**
- * Contrato de acceso a datos para las tareas.
- * Permite que la lógica de negocio (GestorTareas) no dependa
- * directamente de una implementación concreta (MySQL).
- */
 public interface RepositorioTareas {
 
     List<Tarea> obtenerTareas();
